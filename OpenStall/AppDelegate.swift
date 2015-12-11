@@ -71,6 +71,10 @@ class AppDelegate: NSObject, NSApplicationDelegate {
                         let jsonObject = try NSJSONSerialization.JSONObjectWithData(data!, options: NSJSONReadingOptions())
                         
                         guard let json = jsonObject as? [String: AnyObject] else {
+                            // Added this VVVVVVVVVVVVVVVVVVV
+                            print("Error fetching logTailer: jsonObject nil")
+                            self.online = false
+                            // ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
                             return
                         }
                         
@@ -79,9 +83,13 @@ class AppDelegate: NSObject, NSApplicationDelegate {
                             if !self.online {
                                 self.online = true
                             }
+                        } else {
+                            // Added this VVVVVVVVVVVVVVVVVVV
+                            print("Error fetching logTailer: json[\"stall_open\"] nil")
+                            self.online = false
+                            // ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
                         }
-                    }
-                    catch _ {
+                    } catch _ {
                         if let error = error {
                             print("Error fetching logTailer: \(error.localizedDescription)")
                         }
@@ -92,65 +100,8 @@ class AppDelegate: NSObject, NSApplicationDelegate {
                     }
                 }
             }
-            
             dataTask.resume()
         }
     }
-    
-//    func setStatusFromLogTailerService() {
-//        if let url = NSURL(string: requestString) {
-//            let req = NSMutableURLRequest(URL: url)
-//            req.HTTPMethod = "POST"
-//            let dataTask = session.dataTaskWithRequest(req) {
-//                (data, response, error) in
-////                if data != nil {
-////                    do {
-////                        let jsonObject: AnyObject? = try NSJSONSerialization.JSONObjectWithData(data!, options: NSJSONReadingOptions())
-////                        if (jsonObject as! NSDictionary)["stall_open"] != nil {
-////                            self.open = (jsonObject as! NSDictionary)["stall_open"] as! Bool
-////                            if(!self.online) {
-////                                self.online = true
-////                            }
-////                        }
-////                    } catch _ {
-////                        print("Error fetching logTailer: \(error!.localizedDescription)")
-////                        self.online = false
-////                    }
-////                }
-//                if data != nil {
-//                    do {
-//                        guard let jsonObject: AnyObject? = try NSJSONSerialization.JSONObjectWithData(data!, options: NSJSONReadingOptions()) else {
-//                            return
-//                        }
-//                        
-//                        guard let json = jsonObject as? [String: AnyObject] else {
-//                            return
-//                        }
-//                        
-//                        if let openStatus = json["stall_open"] as? Bool {
-//                            self.open = openStatus
-//                            if !self.online {
-//                                self.online = true
-//                            }
-//                        }
-//                    }
-//                    catch _ {
-//                        if let error = error {
-//                            print("Error fetching logTailer: \(error.localizedDescription)")
-//                        }
-//                        else {
-//                            print("Unknown error fetching logTailer")
-//                        }
-//                        self.online = false
-//                    }
-//                } else {
-//                    print("Error fetching logTailer: \(error!.localizedDescription)")
-//                    self.online = false
-//                }
-//            }
-//            dataTask.resume()
-//        }
-//    }
-
 }
 
