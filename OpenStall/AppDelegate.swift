@@ -71,10 +71,8 @@ class AppDelegate: NSObject, NSApplicationDelegate {
                         let jsonObject = try NSJSONSerialization.JSONObjectWithData(data!, options: NSJSONReadingOptions())
                         
                         guard let json = jsonObject as? [String: AnyObject] else {
-                            // Added this VVVVVVVVVVVVVVVVVVV
                             print("Error fetching logTailer: jsonObject nil")
                             self.online = false
-                            // ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
                             return
                         }
                         
@@ -84,10 +82,8 @@ class AppDelegate: NSObject, NSApplicationDelegate {
                                 self.online = true
                             }
                         } else {
-                            // Added this VVVVVVVVVVVVVVVVVVV
                             print("Error fetching logTailer: json[\"stall_open\"] nil")
                             self.online = false
-                            // ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
                         }
                     } catch _ {
                         if let error = error {
@@ -98,9 +94,15 @@ class AppDelegate: NSObject, NSApplicationDelegate {
                         }
                         self.online = false
                     }
+                } else {
+                    print("Error fetching logTailer: data nil")
+                    self.online = false
                 }
             }
             dataTask.resume()
+        } else {
+            print("Error fetching logTailer: url nil")
+            self.online = false
         }
     }
 }
